@@ -31,17 +31,18 @@ class VKUser():
         self.user_photo.raise_for_status()
         self.user_albums = requests.get(api_url + 'photos.getAlbums', params=params_for_albums)
         self.user_albums.raise_for_status()
-        # Убрать title из self.dict_user_albums, так как мы им не пользуемся
+
         let_list = []
         for i in self.user_albums.json()['response']['items']:
-            let_list.append({'id' : i['id'], 'title' : i['title']})
+            let_list.append({'id' : i['id']})
         self.dict_user_albums = {key : value for key, value in zip(list(range(1, self.user_albums.json()['response']['count'] + 1)), let_list)}
         self.current_album = input(f'Введите номер альбома {[(x , y["title"]) for x, y in zip(self.dict_user_albums.keys(), self.user_albums.json()["response"]["items"])]}: ')
+
         # Далее будем ссылаться на нужный альбом и брать от туда фотки
 p1 = VKUser('24415708')
 # pprint(p1.user_photo.json())
 # print(p1.user_albums.json()['response']['count'])
-# pprint(p1.dict_user_albums)
+pprint(p1.dict_user_albums)
 print(p1.current_album)
 # pprint(p1.user_albums.json()['response']['items'])
 # print()
