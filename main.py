@@ -3,7 +3,9 @@ from current_album import *
 import os
 import datetime
 
-
+# создадим пользователя
+# выведем необходимые строки в консоль для понимания
+# также попросим пользователя ввести необходимые данные для работы программы
 user_1 = VKUser(f"{ input('Введите id пользователя VK.com: ') }")
 print('Введите интересующий Вас альбом из предложенных: ')
 for number_album in range(1, user_1.number_albums + 1):

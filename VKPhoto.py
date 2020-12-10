@@ -15,6 +15,7 @@ class VKPhoto():
         pprint(self.photo_info)
 
     def find_max_size(self):
+        # сравним размер фото в альбоме с элементами types_of_photo_sizes, записанными по убыванию размера фото
         types_of_photo_sizes = ['w', 'z', 'y', 'r', 'q', 'p', 'o', 'x', 'm', 's']
         for max_size in types_of_photo_sizes:
             for available_size in self.sizes:

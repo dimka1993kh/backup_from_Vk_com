@@ -15,6 +15,7 @@ class Current_album():
         access_rights = 0o755
         folder_name = f'Альбом {self.current_album_object.title} пользователя VK {self.VKUser.first_name} {self.VKUser.last_name}'
         path = os.path.join(folder_name)
+        # проверим наличие данной папки на ПК
         if not os.path.exists(folder_name):
             os.mkdir(folder_name, access_rights)
             print(f'Создана новая папка "{path}".')
@@ -28,6 +29,7 @@ class Current_album():
             if index < number_photos:
                 resp_photo = requests.get(url)
                 resp_photo.raise_for_status()
+                # Запишем 2 разных пути сохранения фото. В первом случае станадртное название, во втором - при название изменится, если такое название уже есть (правда 1 раз. если попадется еще одна такая же фотка, что результат перезапишется)
                 path_to_save = os.path.join(path, str(self.photos_in_current_album[index].likes) + ' лайков' + '.jpg')
                 alternative_path_to_save = os.path.join(path, str(self.translation_from_unixtime(self.photos_in_current_album[index].date))[:10] + ' ' + str(self.photos_in_current_album[index].likes) + ' лайков.jpg')
                 if not os.path.exists(path_to_save):
@@ -36,7 +38,7 @@ class Current_album():
                 else:
                     with open(os.path.join(alternative_path_to_save), 'wb') as f:
                         f.write(resp_photo.content)
-
+# метод перевода unixtime в 'человеческий' вид
     def translation_from_unixtime(self, date_unix):
         return datetime.datetime.fromtimestamp(date_unix).strftime('%Y-%m-%d %H:%M:%S')
 
