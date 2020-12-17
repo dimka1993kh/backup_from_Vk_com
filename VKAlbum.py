@@ -6,7 +6,7 @@ import time
 
 
 api_url = 'https://api.vk.com/method/'
-access_token = ''
+access_token = '958eb5d439726565e9333aa30e50e0f937ee432e927f0dbd541c541887d919a7c56f95c04217915c32008'
 
 class VKAlbum():
     def __init__(self, album_info):
@@ -33,6 +33,12 @@ class VKAlbum():
         data = ''
         # Альбом "фотографии с пользователем" с id -9000 не удается обработать стандартным способом. Используем необходимый метод, согласно документации VK API
         if self.album_id != -9000:
+            data = requests.get(api_url + 'photos.get', params={**params_to_request, **{'album_id' : self.album_id}})
+            data.raise_for_status()
+        elif self.album_id == 'profile':
+            data = requests.get(api_url + 'photos.get', params={**params_to_request, **{'album_id' : self.album_id}})
+            data.raise_for_status()
+        elif self.album_id == 'wall':
             data = requests.get(api_url + 'photos.get', params={**params_to_request, **{'album_id' : self.album_id}})
             data.raise_for_status()
         else:

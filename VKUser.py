@@ -22,13 +22,13 @@ class VKUser():
         self.user_info = requests.get(api_url + 'users.get', params=params)
         self.user_info.raise_for_status()
         self.user_id =  self.user_info.json()['response'][0]['id']
+        self.is_closed = self.user_info.json()['response'][0]['is_closed']
 
         params_for_albums = {
             **params, 
-            'need_system' : '1',
-            'owner_id' : self.user_id
+            'need_system' : 1,
+            'owner_id' : self.user_id,
         }
-        # pprint(self.user_info.json())
         self.first_name = self.user_info.json()['response'][0]['first_name']
         self.last_name = self.user_info.json()['response'][0]['last_name']
 
@@ -43,7 +43,7 @@ class VKUser():
 
     def create_VKAlbums(self, params_to_request):
         result = []
-        bar = IncrementalBar('Загрузка информции об альбомах.', max = self.number_albums) # КАК ОРГАНИЗОВАТЬ PB КАК ОТДЕЛЬНУЮ ФУНКЦИЮ????
+        bar = IncrementalBar('Загрузка информции об альбомах.', max = self.number_albums) 
         for info in self.info_for_albums:
             result.append(VKAlbum(info))
             bar.next()
@@ -52,12 +52,19 @@ class VKUser():
         return result
     
     def find_info_for_albums(self, params_to_request):
+        if self.is_closed == True:
+            raise Exception('Ошибка. Данный пользователь приватный. Вы не сможете скачать его фотографии.')
         result = []
         data = requests.get(api_url + 'photos.getAlbums', params=params_to_request)
         data.raise_for_status()
-        for i in data.json()['response']['items']:
-            info = {'id' : i['id'], 'size' : i['size'], 'owner_id' : i['owner_id'], 'title' : i['title']}  
-            result.append(info)
+        if 'error' in data.json().keys():
+            print('Ошибка. Вы не имеете доступа к альбомам пользователя. Будет создано 2 альбома.')
+            result.append({'id' : 'profile', 'size' : 'unknown', 'owner_id' : self.user_id, 'title' : f'Фотографии со страницы'})
+            result.append({'id' : 'wall', 'size' : 'unknown', 'owner_id' : self.user_id, 'title' : f'Фотографии на стене'})
+        else:
+            for i in data.json()['response']['items']:
+                info = {'id' : i['id'], 'size' : i['size'], 'owner_id' : i['owner_id'], 'title' : i['title']}  
+                result.append(info)
         return result
     
 

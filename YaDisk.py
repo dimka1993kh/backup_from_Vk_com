@@ -12,7 +12,7 @@ class YaUploader:
     def upload_from_URL(self, current_album, path_folder, number_photos):
         result = []
         self.create_folder(path_folder)
-        URL = 'https://cloud-api.yandex.net/v1/disk/resources/upload'
+        URL = 'https://cloud-api.yandex.net/v1/disk/resources/upload/'
         
         names_files = {}
         for index, url in enumerate(current_album.urls_photos):

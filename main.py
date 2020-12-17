@@ -72,12 +72,13 @@ if download_condition_on_YaDisk:
     yadisk = YaUploader(input('Введите токен с Полигона Яндекс.Диска: '))
     result = yadisk.upload_from_URL(current_album, folder_name, number_load_photo)
     print('Фотографии были загружены на Яндекс.Диск')
+    pprint(result)
 else:
     print('Фотографии НЕ загружены на Яндекс.Диск')
 
 print('Завершение работы программы')
 
-pprint(result)
+
 
 
 
